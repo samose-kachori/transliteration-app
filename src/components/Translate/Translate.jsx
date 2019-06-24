@@ -7,6 +7,8 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+import { UI_SERVICE_URL } from '../../constants/constants';
 
 const suggestions = [
     { label: 'Afghanistan' },
@@ -90,19 +92,31 @@ function getSuggestions(value) {
     return inputLength === 0 ? [] : filterSuggestions(inputValue, inputLength);
 }
 
-function filterSuggestions(inputValue, inputLength)
+async function filterSuggestions(inputValue, inputLength)
 {
     let count = 0;
-    return suggestions.filter(suggestion => {
-        const keep =
-            count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
-
-        if (keep) {
-            count += 1;
-        }
-
-        return keep;
+    let result = await axiosTest().then(response => {
+        console.log(response.data);
+        return response.data;
+    }).catch(response => {
+        console.log(response);
     });
+    console.log(Array.from(result));
+    return Array.from(result);
+    // return suggestions.filter(suggestion => {
+    //     const keep =
+    //         count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue;
+    //
+    //     if (keep) {
+    //         count += 1;
+    //     }
+    //
+    //     return keep;
+    // });
+}
+
+function axiosTest() {
+   return axios.get(`${UI_SERVICE_URL}/translate/o`);
 }
 
 function getSuggestionValue(suggestion) {
